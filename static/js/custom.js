@@ -25,8 +25,47 @@
     // PARALLAX EFFECT
     $.stellar({
       horizontalScrolling: false,
-    }); 
+    });
 
+    $('#downloadBtn').on('click', async () => {
+//    const fileName = 'TortoiseAutomate.jar';
+//    const fileName = 'settings.xml';
+//    const response = wait fetch('/download/' + fileName);
+//    if(response.ok) {
+//        const blob = await response.blob();
+//        const url = URL.createdObjectURL(blob);
+//        const a = document.createElement(e);
+//        a.href = url;
+//        a.download = fileName;
+//        a.click();
+//        URL.revokeObjectURL(url);
+//    }else{
+//        alert("error: " + response);
+//    }
+           $.ajax({
+               url: "/download/settings.xml",
+               type: "get",
+               xhrFields: { responseType : "arrayBuffer"},
+               success: function(res){
+                  var blob = new Blob([res.data],{"type" : "xml"});
+                  const fileName = "TortoiseAutomate.jar";
+                  const reader = new FileReader();
+                  reader.readAsDataURL(blob);
+                  reader.onload = (e) =>{
+                    const a = document.createElement("a");
+                    a.download = fileName;
+                    a.href = e.target.result;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                  }
+               },
+               error : function(res){
+                console.log(res);
+               }
+           })
+
+    });
 
     // ABOUT SLIDER
     $('.owl-carousel').owlCarousel({
